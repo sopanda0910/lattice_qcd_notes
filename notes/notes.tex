@@ -1,0 +1,90 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Lattice QCD Notes}
+\author{Shivam Panda}
+
+\date{}
+\begin{document}
+\maketitle
+
+\section{Background}
+Typically, the standard Hamiltonian is the generator of evolution. So, in typical QM, the transition amplitudes (the probability of a particle starting at $x_i$ at $t_i$ to be found at $x_f$ at $t_f$ is given by: 
+\begin{equation}
+    <x_f|e^{-iH(t_f-t_i)}|x_i>
+\end{equation}
+However, the imaginary exponential leads to computational troubles due to rapid oscillations, so a Wick Rotation is performed with transforms $it \xrightarrow{} t$. This Wick Rotation switches Minkowski space to Euclidean space, where time behaves as another spacial dimension and allows the computation using a 4D grid. However, this change in time causes significant limitations on simulating dynamics and time-evolution in the lattice. This leads to exponential decrease rather than oscillations, which is much more computationally stable. With this transformation, the transition amplitudes can be written as: 
+\begin{equation}
+    <x_f|e^{-H(t_f-t_i)}|x_i> =\int Dx(t)e^{-S[x]}
+\end{equation}
+This a 1-dimensional path integral, where $Dx(t)=A\int dx_1dx_2dx_3...dx_{N-1}$ as $N \xrightarrow{} \infty$. Each $dx_i$ represents all the possible positions at different slices of time. Essentially, it is an integral of all possible functions of $x(t)$. Paths with higher action are exponentially supressed, which means that the leading contributor is the path with minimal action.
+After the Wick Rotation, the action and Lagrangian change
+\begin{equation}
+    S[x] = \int dtL(x,\dot{x})=\int dt[\frac{m\dot{x}^2}{2}+V(x(t))]
+\end{equation}
+The most significant difference is the positive sign in the Lagrangian. Using this formulation, the propagator can be written by resolving the identity into energy eigenstates. Since the Hamiltonian is diagonal with the energy eigenstates, the exponential simplifies from the Hamiltonian to simple energy eigenvalues.
+\begin{equation}
+    <x|e^{-HT}|x>=\sum <x|E_i>e^{-E_iT}<E_i|x>
+\end{equation}
+Due to the exponential suppression, as $T \xrightarrow{} \infty$, only the ground state remains and $<x|e^{-HT}|x>=e^{-E_0T}|<x|E_0>|^2$. Since $\psi_n(x)=<x|E_n>$, which is just an energy eigenstate written the position basis. The normalization properties of the wavefunction lead to $\int |\psi_n(x)|^2dx=1$, so that the ground state can be extracted by integrating all x.
+\begin{equation}
+    \int dx <x|e^{-HT}|x> =e^{-E_0T}
+\end{equation}
+However, this equation only holds true as $T \xrightarrow{} \infty$
+\subsection{Discrete Path Integral}
+Since the computer cannot simulate all possible functions x(t), it is possible to make the t-axis discrete, and describe the position $x(t_i)$, and integrate with all possible x to replicate the idea of integrating over all possible functions. Therefore, there are as many integrals as there are grid points on the t-axis. 
+The t-axis can be made discrete by $t_j=t_0 + ja$, where $a = \frac{t_f-t_0}{N}$. With this, a path described as a vector $x = \{x(t_0),x(t_1), \dots ,x(t_N)\}$. Since the end points are fixed, the path integral becomes $Dx(t)=A\int dx_1dx_2dx_3...dx_{N-1}$ as $N \xrightarrow{} \infty$. A is simply a normalization factor. Using this, the action integral can be determined using discrete approximations of the derivative.
+\begin{equation}
+    \int_{t_j}^{t_{j+1}}dt =\int_{t_j}^{t_{j+1}}a[\frac{m}{2}(\frac{x_{j+1} - x_{j}}{a})^2+\frac{V(x_{j+1})+V(x_j)}{2}]
+\end{equation}
+The derivative is replaced by the limiting definition of the derivative, where dt is taken as a, and the potential is determined at an interval by taking the average value. Using all of this, the propagator and path integral can be computed.
+\begin{equation}
+    <x|e^{-HT}|x>=A\int_{-\infty}^{\infty}dx_1dx_2\dots dx_{N-1}e^{-S_{lat}[x]}
+\end{equation}
+\begin{equation}
+    S_{lat}[x]=\sum_{j=0}^{N-1}[\frac{m}{2a}({x_{j+1}-x_{j})^2 + aV(x_j)]}
+\end{equation}
+
+\subsection{Monte Carlo Evaluation}
+To determine non-groundstate properties, new operators can interrupt the propagation of the ground state.
+\begin{equation}
+    <<x(t_2)x(t_1)>> = \frac{\int Dx(t) x(t_2)x(t_1) e^{-S[x]}}{\int Dx(t)e^{-S[x]}}
+\end{equation}
+To clarify, this is the weighted sum of the position operator at $t_2$ and $t_1$. This is essentially measuring the correlation between $x(t_2)$ and $x(t_1)$. If the correlation drops off instantly, there is a high energy gap between the ground state and 1st energy state. 
+Therefore, the mass of the interaction particle is very heavy. However, if the correlation dies off very slowly, the energy gap is very small and the interaction particle's mass is very low.
+This is essentially a sandwich of 3 different operators. Evolve the system from $t_i$ to $t_1$. The $\tilde{x}$ operator acts on the system. Then the system evolves from $t_1$ to $t_2$. Then the $\tilde{x}$ operator acts again. Then, the system evolves until $t_f$. \newline
+By setting $t_i = 0$ and $t_f = t$, the numerator becomes 
+\begin{equation}
+    Tr(e^{-H(T-t)}\tilde{x}e^{-Ht}\tilde{x})
+\end{equation}
+The trace is essentially a global property (the sum of the eigenvalues of a given operator), and it is basis independent, and gives information fo the system as a whole (weighted average of energy levels). This is done by integrating over all starting positions, which is shown in Eq 13. 
+This can be rewritten as,
+\begin{equation}
+    <<x(t_2)x(t_1)>> = \frac{\sum e^{-E_nT} <E_n | \tilde{x}e^{-(H-E_n)t} \tilde{x}|E_n>}{\sum e^{-E_nT}}
+\end{equation}
+Essentially, by inserting the identity of energy eigenstates into the integral formulation, it can be rewritten as a a sum of energy eigenstates. The denominator is the partition function and normalizes the correlations. 
+\begin{equation}
+    <x|e^{-Ht}|x>= \int Dx(t)e^{-S[x]} = \sum <x|E_n> e^{-E_nt} <E_n|x>
+\end{equation}
+Again, using the normalization of the energy wave functions $\psi_n(x)$, integrating x across x results in
+\begin{equation}
+    \int dx <x|e^{-Ht}|x> = \sum e^{-E_nt}
+\end{equation}
+In general, any form of this integral corresponds to a Trace of an operator. 
+If T is very large, then the ground state dominates this sum once again. Therefore, the correlation function G(t) can be written as: 
+\begin{equation}
+    G(t) = <<x(t_2)
+\end{equation}
+\end{document}
