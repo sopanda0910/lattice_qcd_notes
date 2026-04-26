@@ -58,33 +58,101 @@ The derivative is replaced by the limiting definition of the derivative, where d
 \end{equation}
 
 \subsection{Monte Carlo Evaluation}
-To determine non-groundstate properties, new operators can interrupt the propagation of the ground state.
+In the previous section, the probability amplitude was a path integral, however the every path had the same boundary conditions.
+However, in this next section, the path integrals will be evaluated at every possible boundary condition, so it is effectively an integral of path integrals in some sense.
+To find the correlation between $x(t_2)$ and $x(t_1)$, 
 \begin{equation}
-    <<x(t_2)x(t_1)>> = \frac{\int Dx(t) x(t_2)x(t_1) e^{-S[x]}}{\int Dx(t)e^{-S[x]}}
+<<x(t_2)x(t_1)>> = \frac{\int Dx(t) x(t_2)x(t_1)e^{-S[x]}}{\int Dx(t) e^{-S[x]}}
 \end{equation}
-To clarify, this is the weighted sum of the position operator at $t_2$ and $t_1$. This is essentially measuring the correlation between $x(t_2)$ and $x(t_1)$. If the correlation drops off instantly, there is a high energy gap between the ground state and 1st energy state. 
-Therefore, the mass of the interaction particle is very heavy. However, if the correlation dies off very slowly, the energy gap is very small and the interaction particle's mass is very low.
-This is essentially a sandwich of 3 different operators. Evolve the system from $t_i$ to $t_1$. The $\tilde{x}$ operator acts on the system. Then the system evolves from $t_1$ to $t_2$. Then the $\tilde{x}$ operator acts again. Then, the system evolves until $t_f$. \newline
-By setting $t_i = 0$ and $t_f = t$, the numerator becomes 
+Here, both path integrals are integrating over all paths for a set of boundary conditions, and then also integrating over all possible boundary conditions.
+In general, the $<<x(t_1)>>$ gives information about on average, what is the position of the particle at $t_1$, where the average is taken over all paths.
+The correlation, like shown in Eq (9), gives information about the correlation between the position of the particle at $t_1$ and $t_2$. If $t_1 = t_2$, then 
+this would give ifnromation about the variance of $x(t_1)$, which is essentially the width of the position due to quantum fluctuations.
+Since the integral is over all possible boundary conditions, the denominator can be written as
 \begin{equation}
-    Tr(e^{-H(T-t)}\tilde{x}e^{-Ht}\tilde{x})
+    \int Dx(t) e^{-S[x]} = \int dx <x|e^{-HT}|x> = \sum e^{-E_n*T}
 \end{equation}
-The trace is essentially a global property (the sum of the eigenvalues of a given operator), and it is basis independent, and gives information fo the system as a whole (weighted average of energy levels). This is done by integrating over all starting positions, which is shown in Eq 13. 
-This can be rewritten as,
+This integral over boundary condition is the trace of an operator, which is just the sum of its eigenvalues. 
+Going from this integral to sum is simply changing the basis for this trace calculation, moving from position to energy basis.
+This equation is considered the partition function for a system.
+The numerator can be simplified by considering that $t_f - t_1 = T$ and $t = t_2 - t_1$.
+A similar approach can be taken with the numerator of Eq 9, but more care needs to be taken. \newline
 \begin{equation}
-    <<x(t_2)x(t_1)>> = \frac{\sum e^{-E_nT} <E_n | \tilde{x}e^{-(H-E_n)t} \tilde{x}|E_n>}{\sum e^{-E_nT}}
+    \sum_n |E_n>e^{-H(t_f - t_2)}\hat{x}e^{-H(t_2 - t_1)}\hat{x}e^{-H(t_1 - t)}<E_n|
 \end{equation}
-Essentially, by inserting the identity of energy eigenstates into the integral formulation, it can be rewritten as a a sum of energy eigenstates. The denominator is the partition function and normalizes the correlations. 
+This expression rewrites the operator in energy basis, but it also gives intuition as to what the operator actually does.
+Essentially, it allows the system to evolve from $t_i$ to $t_1$, then applies the position operator. 
+Then, allows the system to evolve from $t_1$ to $t_2$, and then applies another position operator at $t_2$. 
+Finally, it allows the system to evolve for the rest of the time considered.
+By switching to the energy basis, the Hamiltonian becomes diagonal, so the evolution terms simplify.
 \begin{equation}
-    <x|e^{-Ht}|x>= \int Dx(t)e^{-S[x]} = \sum <x|E_n> e^{-E_nt} <E_n|x>
+    \sum_n e^{-E_n(t_f - t_2 + t_1 - t_i)} <E_n|\hat{x}e^{-H(t_2 - t_1)}\hat{x}|E_n>
 \end{equation}
-Again, using the normalization of the energy wave functions $\psi_n(x)$, integrating x across x results in
 \begin{equation}
-    \int dx <x|e^{-Ht}|x> = \sum e^{-E_nt}
+    \sum_n e^{-E_nT} <E_n|\hat{x}e^{-(H - E_n)t}\hat{x}|E_n>
 \end{equation}
-In general, any form of this integral corresponds to a Trace of an operator. 
-If T is very large, then the ground state dominates this sum once again. Therefore, the correlation function G(t) can be written as: 
+Using this equation, and assuming that $T >> t$, where T is very large, the correlation
 \begin{equation}
-    G(t) = <<x(t_2)
+    G(t) = \frac{e^{-E_0T<E_0|\hat{x}e^{-(H - E_0)t}\hat{x}|E_0>}}{e^{-E_0T}} = <E_0|\hat{x}e^{-(H - E_0)t}\hat{x}|E_0>
 \end{equation}
+Since, as T becomes very large, the ground state dominates. Using parity arguments, the position operator is odd, while the $|E_0>$ is even.
+Therefore, as t is large, 
+\begin{equation}
+    G(t) = |<E_0|\hat{x}|E_1>|^2 e^{-(E_1 - E_0)}t
+\end{equation}
+Using this formulation, the first energy eigenstate can be determined by evaluating the correlation function at t and t+a.
+\begin{equation}
+    log(\frac{G(t)}{G(t+a)}) = (E_1 - E_0)a
+\end{equation}
+$<E_0|\hat{x}|E_1>$ the transition matrix element that physically determines the probability of the position operator kicking the first energy eigenstate into the ground state.
+Using this technique, $<<\Gamma[x]>>$ can be determined by generating a large number of configurations (paths) on the grid such that the probability
+of obtaining a particular path is proportional to $e^{-S[x]}$, and thus, the expected value of $\Gamma[x]$ is simply a weighted average of these configurations.
+This is a Monte Carlo estimator for the true expected value of the functional, however the uncertainty decreases with $1/\sqrt{N}$. \newline
+Generating paths with this probability proportional to the exponent of the action is not a simply task however it can be performed by the Metropolis Algorithm.
+\begin{equation}
+    <<\Gamma[x]>> = \frac{1}{N_{cf}} \sum_{\alpha}^{N_{cf}} \Gamma[x^{(\alpha)}]
+\end{equation}
+This begins by start with a random path $x^0$. Then to generate $x^1$, all of the sites of the lattice are visited and the values at those sites are randomized by this procedure.
+\begin{list}{}{}
+    \item 1) Generate a random number ($\alpha$) $\in [-\epsilon, \epsilon]$
+    \item 2) Replace $x_j$ with $x_j$ + $\alpha$
+    \item 3) If action is reduced, actually replace $x_j$ with this new value
+    \item 4) If action  is increased, then generate a random number ($\beta$) between 0 and 1. Retain new value if $e^{-\Delta S} > \beta$. Otherwise, keep old value and move to next site.
+\end{list}
+
+The value of $\epsilon$ is critical since if it is too high, then most new values for $x_j$ will be rejected, while if it is too small, many will get accepted, but the values will not change significantly.
+The goal is that $x_j$ should pass with probability 0.4 - 0.6.
+Additionally, paths should be systematically chosen as to eliminate the correlation between successive paths.
+Lastly, the first 5N or 10N should be disregarded since it is extremely random and useless.
+
+\subsection{Statistical Errors}
+It is incredibly computationally intensive to estimate the statistical uncertainty of these monte carlo estimators by repeating the entire estimate a 100 times. Therefore, there is Statistical Bootstrapping.
+Essentially, from the given values of G(t) for each path, a random selection of these G(t)'s can be picked to find an estimate, and these estimates can be used to determine the statistical errors.
+Another useful process is called binning, where a systematic sampling of configurations and their corresponding G(t) values can be taken to find estimates and therefore be partially averaged to get estimates. 
+These estimates can then be used to determine the statistical errors.
+One key limitation of binning is that within a bin, the configurations could possibly be correlated, and therefore, the errors estimated could be much lower than the true errors.
+This would occur if $N_corr$ is taken to be too small.
+
+\section{Field Theory on Lattice}
+With transition from QM to Field Theory is essentially adding spatial dimension. The $x(t)$ from before could be considered a field theory of 0 spatial and 1 temporal dimension.
+Instead of have a ground state energy eigenstate, the field has a ground state $|0>$, which corresopnds to no particles. The operators $\phi$ behaves like the position operator, 
+and it is possible for this operator to excite the field above its ground state, and create a particle. \newline
+The nodes of the 4D Euclidean grid, separated by the lattice spacing a, all have corresponding values of the field
+The partition function still exists in path integral form: 
+\begin{equation}
+    Z = \int e^{-S[\phi]} \prod d\phi(x_j)
+\end{equation}
+This is essentially a path integral over all possible field configurations.
+$S[\phi]$ corresponds to the field action. The spatial and temporal derivates transform in the differences of the scalar field with neighboring field values.
+Similar to the operators used in QM to study excitations from the ground state, operators like: 
+\begin{equation}
+    \Gamma(t) = \frac{1}{\sqrt{N}} \sum \phi(\vec{x_j}, t)
+\end{equation}
+Summing over all the spatial vectors enforces zero 3-momentum. Since the excitations correspond to particle creation, their energies are teh masses of the particles.
+Any non-zero momentum would deconstructively interfere and cancel itself out since it would repeat throughout the lattice. (QUESTION)
+\begin{equation}
+    <<\Gamma(t)\Gamma(0)>> = |<0|\Gamma(0)|\phi : \vec{p} = 0>|^2 e^{-m_\phi*t}
+\end{equation}
+Where $|\phi : \vec{p} = 0>$ represents a single $\phi$-particle state with zero three momentum and $m_\phi$ represents the mass of the particle.
+\subsection{Perturbation Theory and Tadpole Improvement}
 \end{document}
