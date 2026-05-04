@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1777231624.93079 "c:/Users/ompan/OneDrive/Documents/Programming/lattice_qcd/notes/notes.tex" "notes.pdf" "notes" 1777231625.9056 0
+["pdflatex"] 1777880780.24558 "c:/Users/ompan/OneDrive/Documents/Programming/lattice_qcd/notes/notes.tex" "notes.pdf" "notes" 1777880781.29791 0
   "C:/Users/ompan/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1776531807 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/ompan/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1773180299 13333487 66fc4a1c8a3b648d814e2d94d0222b51 ""
   "C:/Users/ompan/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
@@ -82,10 +82,10 @@
   "C:/Users/ompan/AppData/Local/Programs/MiKTeX/tex/latex/refcount/refcount.sty" 1576433952 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "C:/Users/ompan/AppData/Local/Programs/MiKTeX/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1751104012 9684 a33a14b82ce60d6e77cb9be689d79ee6 ""
   "C:/Users/ompan/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "c:/Users/ompan/OneDrive/Documents/Programming/lattice_qcd/notes/notes.tex" 1777231623 12595 e48c716209534ed8a7361610628edaa9 ""
-  "notes.aux" 1777231625 1040 7a4ff1819f459e1fc25e3da1213bfc36 "pdflatex"
-  "notes.out" 1777231625 1040 3052f01d977d5ff13c0849667b5ed9ae "pdflatex"
-  "notes.tex" 1777231623 12595 e48c716209534ed8a7361610628edaa9 ""
+  "c:/Users/ompan/OneDrive/Documents/Programming/lattice_qcd/notes/notes.tex" 1777880779 13360 82164270bbfb2d09dd4223189d73675d ""
+  "notes.aux" 1777880781 1003 05bfae055dd23f261fad76076bf3c2b3 "pdflatex"
+  "notes.out" 1777880781 888 4fa4d0d4884b49e45c31e530f8ae460a "pdflatex"
+  "notes.tex" 1777880779 13360 82164270bbfb2d09dd4223189d73675d ""
   (generated)
   "notes.aux"
   "notes.log"

@@ -151,8 +151,18 @@ Similar to the operators used in QM to study excitations from the ground state, 
 Summing over all the spatial vectors enforces zero 3-momentum. Since the excitations correspond to particle creation, their energies are teh masses of the particles.
 Any non-zero momentum would deconstructively interfere and cancel itself out since it would repeat throughout the lattice. (QUESTION)
 \begin{equation}
-    <<\Gamma(t)\Gamma(0)>> = |<0|\Gamma(0)|\phi : \vec{p} = 0>|^2 e^{-m_\phi*t}
+    <<\Gamma(t)\Gamma(0)>> = |<0|\Gamma(0)|\phi : \vec{p} = 0>|^2 e^{-m_\phi t}
 \end{equation}
-Where $|\phi : \vec{p} = 0>$ represents a single $\phi$-particle state with zero three momentum and $m_\phi$ represents the mass of the particle.
-\subsection{Perturbation Theory and Tadpole Improvement}
+Where $|\phi : \vec{p} = 0>$ represents a single $\phi$-particle state with zero three momentum and $m_\phi$ represents the mass of the particle. \newline
+Often, additional terms are added into the Lagrangian to add local interactions to account for the ultraviolet cutoff.
+The ultraviolet cutoff is simply the lattice property that there is a minimum wavelength ($\lambda = 2a$), where a is the lattice spacing.
+Sometimes, these additional terms influence new modes of oscillations and solutions which are considered "numerical ghosts".
+
+To improve these discretization errors, it is possible to make the transformation
+\begin{equation}
+    x_j = \tilde{x_j} + \psi_1 a^2 \Delta^(2)\tilde{x_j} + \psi_2 a^2 \omega_0^2 \tilde{x_j}
+\end{equation}
+With the correct choices of $\psi_1$ and $\psi_2$, all $O(a^2)$ terms can cancel in the action, and the discretization errors will be $O(a^4)$ and all numerical ghosts can be removed.
+\section{QCD on a Lattice}
+
 \end{document}
