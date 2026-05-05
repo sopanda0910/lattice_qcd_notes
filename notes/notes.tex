@@ -10,6 +10,7 @@
 
 % Useful packages
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
@@ -164,5 +165,106 @@ To improve these discretization errors, it is possible to make the transformatio
 \end{equation}
 With the correct choices of $\psi_1$ and $\psi_2$, all $O(a^2)$ terms can cancel in the action, and the discretization errors will be $O(a^4)$ and all numerical ghosts can be removed.
 \section{QCD on a Lattice}
+\subsection{Classical Gluons}
+For some background, the vector potential and the field tensor are very different in QCD.
+In QED, the vector potential's components are simply scalars, but in QCD, they are 3x3 Hermitian Traceless matrices.
+Each component of the vector potential can be viewed as a linear combination of the 8 Gell-Mann matrices, each of which correspond to a different gluon.
+Since the vector potential is a linear combination of these matrices, each of the "coefficients" of this linear combination is a 4-vector itself, but with scalar components.
+To understand what these scalar components are doing, it is important to first understand what the Gell-Mann matrices actually represent, and what QCD itself is.
+Just like the vector potential in QED is the "correction" term for local U(1) changes to the wave function, the vector potential for QCD represents corrections to local changes of the color.
+In QCD, color is represented as a $\mathbb{C}^3$, which is a 3-component complex vector. Each of these components correspond to the 'probability' of color red, blue, or green.
+The fundamental concept of QCD is that the universe is invariant to local SU(3) changes, which are essentially rotations in this $\mathbb{C}^3$ space that switch around the probability amplitudes of each color while preserving the total probability.
+Therefore, the vector potential exists to be the "correction" term for these lcoal SU(3) changes, which is why the Gell-Mann matrices are themselves SU(3) matrices, so each gluon corresponds to a different type of rotation in $\mathbb{C}^3$. 
+These 8 gluons serve as the basis of any general rotation in this space, and therefore each component of the 4-vector potential corresponds to a linear combination of these basis SU(3) matrices. \newline
+
+In QED, the vector potential essentially changes the phase of the wave function of the charged particles as the correction to the local U(1) changes, and in QCD, the vector potential changes the orientation of the color vector in $\mathbb{C}^3$.
+However, there is an interesting subtlety to this. In QED, because U(1) is abelian, the vector potential effects simply sum up, so the phase change of two vector potentials overlapping is simply the sum of them. This is because 2D rotations commute.
+In QCD, the SU(3) matrices do not commute, and so in general, overlapping vector potentials do not simply sum. This is what fundamentally leads to gluon-gluon interaction. 
+When these Gell-Mann matrices (the basis gluons) act on a vector in $\mathbb{C}^3$, their contibutions do not simply sum up, and the fact that their commutators are non-zero is what leads to gluons carrying color and self-interacting.
+This is the reason why the field tensor is defined as the 4D curl the vector potential and the commutator between the various components of the 4-vector potential. \newline
+
+The components of the scalar 4-vector coefficients for each Gell-Mann matrix has an interesting physical relevance. Essentially, if the 4-vector coefficient has a non-zero time-like component, then the color vector at that given point will essentially precess and change over time.
+If the space-like components of the scalar 4-vector coefficients is non-zero, as the quark moves through space with some velocity, the color vector will change.
+This behaves very similar to an E-field and B-field, but instead of the phase accumulation of a charged particle, the color vector changes for a quark.
+Keep in mind that each component of the field tensor actually is a 3x3 Hermitian matrix that corresponds to a SU(3) transformation. To understand the need for the commutator, imagine a moving around a tiny square with a non-zero 4-vector potential.
+Suppose that the square is in the xy-plane.
+ It first feels the effect of the $A_x$ component and then $A_y$, and then the reverse. 
+ Because these effects do not commute, the field tensor needs to account for this.
+Besides that, the field tensor is exactly measuring the twisting (or 4D curl) of the 4-vector potential. This is essentially like the parallel transport of general relativity, where when the parallel transport is non-zero (going around a full loop doesn't bring you back to where you start), that is a sign of curvature of the space. 
+Just like that, here, the parallel transport (the full loop of the quark) will not return to where it started because of the non-abelian nature of SU(3).
+Suppose that the quark first travels in x and then y. It would feel the 4-vector potential's x-comopnent transformation and then y, and because the order matters, the commutator must be there.
+There is an intrinsic rotation of the 'axes' themselves due to the non-abelian nature of SU(3), which is the intrinsic rotation. Additionally, there is further rotation due to the 4D curl of the 4-vector potential itself. The net twisting is a combination of these, which is what is captured by the field tensor. \newline
+
+Each component of the field tensor represents the net rotation in $\mathbb{C}^3$ of making an infinitesmal loop in some plane. For example, the $F_{\mu \nu}$ represents the total SU(3) rotation of making a loop in the $\mu - \nu$ plane.
+The lagrangian contains the sum of all of the traces of the square of the components. Fundamentally, $F_{\mu \nu}$ represents the energy or work required to maintain that curvature in color space. Taking the trace and summing all of them correspond to the total work required to maintain some curvature. 
+This is why the lagrangian is essentially a measure of the total cost of all of these twists in the 4-vector potential.
+In the lagrangian, there are really 3 distinct terms. There can be massless gluon waves, which behave exactly like the photon in QED. Then there are 3-gluon interactions, which is essentially energy of 1 gluon splitting into 2 other gluons. Then, there is the 4-gluon vertices, which are 2 gluons scattering off of one another. These interaction terms are what give the strong force its sticky nature.
+
+To maintain the SU(3) guage invariance on a discrete lattice, instead of tracking the vector potential, there is a link object, which is related to the 4-vector potential.
+Additionally, the way that the 4-vector potential is defined, it is the instantaneous color rotation that the quark would experience. However, the actual rotation between nodes of the grid is this SU(3) matrix exponentiated.
+After exponentiating, the U corresponds to a finite SU(3) transformation rather than the infinitesmal transformation that the 4-vector potential represents.
+\begin{equation}
+    U_{\mu}(x) = P(exp({-i \int_{x}^{x+a\mu}}{g A_{\mu} dy}))
+\end{equation}
+The Path Ordered integral is a necessity for dealing with non-abelian multiplication.
+In practice however, because the 4-vector potential can be assumed to be approximately constant through this integration region: 
+\begin{equation}
+    U_{\mu}(x) \approxeq exp(-igaA_{\mu})
+\end{equation}
+Now, these $U_{\mu}$ are considered the fundamental tools on the grid, not the 4-vector potential, since they actually correspond to the vertices between nodes.
+It is important to keep in mind that on the grid, the hermitian conjugate of some $U_{\mu}$ corresponds to the opposite direction vertex at the exact same node. 
+Therefore, considering a 2D slice of space time, really the only vertices that are significant are $U_x$ and $U_y$, which correspond to the positive directions of x and y. The negative can be found by simply taking the hermitian conjugate.
+
+A significant quantity that can be extracted from the $U_{\mu}$ is the trace of its products along a closed loop. First of all, by the structure of it, it is guage invariant. 
+Additionally, the diagonal elements of each $U_{\mu}$ gives information of how much of the red-color stays the red-color or green with green. Therefore, taking the trace of any given $U_{\mu}$, it gives information of how much of the color stays the same between two nodes. 
+Examining the trace of a closed loop gives information of the difference between the color before and after going through the entire loop, and so it gives a measure of the amount of curvature (twisting) of the 4-vector potential and thereby the $U_{\mu}$.
+Therefore, the Wilson Loop function has the structure: 
+\begin{equation}
+    W(C) = \frac{1}{3}Tr(P(exp(-i \int gAdx)))
+\end{equation}
+Where the integral is along the closed loop. This simplifies into: 
+\begin{equation}
+    W(C) = \frac{1}{3}Tr(U_{\mu}(x)U_{\nu}(x + a\mu)\dots U^{\dag}_{\nu}(x))
+\end{equation}
+It is clear that since the loop ends with $U^{\dag}_{\nu}$ and starts with $U_{\mu}$, the loop starts with going to the right and ends with coming down at the same node, which is why it is a closed loop.
+The reason for the factor of a third is because the null case is if there is no parallel transport, and so the resulting matrix multiplication is just I, which has a trace of 3, since this is a 3x3 complex matrix. \newline
+
+A useful operator is the plaquette operator, which is simply the Wilson Loop operator around the smallest possible loop on the grid.
+With a very weak classical $A_{\mu}$, the $P_{\mu \nu} \approx 1$, since there is very little curvature, and the twisting is negligible.
+Therefore, the tension or energy cost of this non-zero vector potential is proportional to the deviation of the plaquette from 1. 
+\begin{equation}
+    S = \beta \sum (1 - P_{\mu \nu})
+\end{equation}  
+By taylor expanding the plaquette operator and using Stoke's theorem in 4D.
+\begin{equation}
+    S = \int d^4x \sum_{\mu \nu}{\frac{1}{2}Tr(F^2_{\mu \nu}) + \frac{a^2}{24}Tr(F_{\mu \nu} (D^2_{\mu} + D^2_{\nu})F_{\mu \nu} + \dots)}
+\end{equation}
+The higher order terms in a are essentially compensating for discretization errors. $D_{\mu}$ represents the covariant derivative, which essentially accounts for the rotation of the axes themselves due to the non-abelian SU(3).
+It is possible to remove discretization errors by account for more points on the grid. For example, the rectangle operator $R_{\mu \nu}$ is essentially the plaquette operator but on a 2a x a rectangle rather than an a x a square.
+Using this rectangle operator and the plaquette operator, it is possible to take a linear combination to only have errors of order $a^4$.
+\begin{equation}
+    S = -\beta \sum \frac{5P_{\mu \nu}}{3} - \frac{R_{\mu \nu} + R_{\nu \mu}}{12}
+\end{equation}
+The action above only has errors of order $a^4$.
+\subsection{Quantum Gluons}
+In the qauntum field theory analysis, there is the idea of tadpoles. Essentially, they are a loop in the Feynmann diagram and represent quantum fluctuations of a particle being created and annihalted instantaneously. 
+This creates a significant amount of noise in these results, and so the values must be renormalized so that the noise is filtered out.
+This renormalization is done by a factor $u_0$, which is essentially the mean link value. Since the plaquette has 4 links, it must be renormalized by $u^4_0$, and the rectangle operator must be renormalized by $u^6_0$.
+Essentially, these tadpoles are gluons that are popping in and out of existence in the vacuum, and so for each link, $u_0$ represents the amount of artificial noise that is being created and must be renormalized.
+One possible way to measure $u_0$: 
+\begin{equation}
+    u_0 = <0|P_{\mu \nu}|0>^(\frac{1}{4})
+\end{equation}
+This is essentially the expected fluctuations of the plaquette operator in a vacuum, and this corresponds to the quantum fluctuations of the gluons in a vacuum. \newline
+
+In addition to these tadpole renormalizations, another renormalization must be made for unphysical contributions for effects that have higher wavelength than can exist on the grid. 
+
+\subsection{Gluon Path Integrals}
+The Metropolis algorith can be used, but now instead of randomly varying the field value across space and time, one must vary this $U_{\mu}$ parameter.
+$U_{\mu}$ is a 3x3 complex matrix, so when it is varied, it is essentially being randomly multiplied by a random SU(3) matrix from a chosen set.
+\begin{equation}
+    U_{\mu} \rightarrow MU_{\mu}
+\end{equation}
+The set of SU(3) matrices M can be generated by first creating a set of hermitian matrices, and then scaling it down and adding $1 + i\epsilon H$. Again, $\epsilon$ determines the size of how much the $U_{\mu}$ actually updates throughout the Metropolis algorithm.
 
 \end{document}
